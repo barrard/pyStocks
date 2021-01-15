@@ -2,18 +2,135 @@ import pandas as pd
 import numpy as np
 import pylab
 import math
+import talib
+from talib import abstract
 
 from scipy import stats
 import statsmodels
 import statsmodels.api as sm
 from statsmodels.stats import diagnostic as diag
 # from statsmodels.stats.outliers_infulence import variance_inflation_factor
-
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import sklearn
 import tulipy as ti
+
+
+# print(talib.get_functions())
+# for groups in talib.get_function_groups():
+#     print(groups)
+#     for func in talib.get_function_groups()[groups]:
+#         print(func)
+#         print(abstract.Function(func))
+
+def add_candle_patterns(days, df):
+    vals = [0 for i in range(days)]
+    for n in range(len(df)-days):
+        val = pattern_recognition(df[n:n+days])
+        vals.append(val)
+    return vals
+
+
+def pattern_recognition(df):
+    val = 0
+    # test_len = 5
+    dates = np.array(df.index)
+    open = np.array(df.open)
+    close = np.array(df.close)
+    high = np.array(df.high)
+    low = np.array(df.low)
+    # volume = np.array(df.volume)
+    tristar = talib.CDLTRISTAR(open, high, low, close)
+    Two_Crows = talib.CDL2CROWS(open, high, low, close)
+    Three_Black_Crows = talib.CDL3BLACKCROWS(open, high, low, close)
+    Three_Inside_Up_Down = talib.CDL3INSIDE(open, high, low, close)
+    Three_Line_Strike = talib.CDL3LINESTRIKE(open, high, low, close)
+    Three_Outside_Up_Down = talib.CDL3OUTSIDE(open, high, low, close)
+    Three_Stars_In_The_South = talib.CDL3STARSINSOUTH(open, high, low, close)
+    Three_Advancing_White_Soldiers = talib.CDL3WHITESOLDIERS(
+        open, high, low, close)
+    Abandoned_Baby = talib.CDLABANDONEDBABY(
+        open, high, low, close, penetration=0)
+    Advance_Block = talib.CDLADVANCEBLOCK(open, high, low, close)
+    Belt_hold = talib.CDLBELTHOLD(open, high, low, close)
+    Breakaway = talib.CDLBREAKAWAY(open, high, low, close)
+    Closing_Marubozu = talib.CDLCLOSINGMARUBOZU(open, high, low, close)
+    Concealing_Baby_Swallow = talib.CDLCONCEALBABYSWALL(open, high, low, close)
+    Counterattack = talib.CDLCOUNTERATTACK(open, high, low, close)
+    Dark_Cloud_Cover = talib.CDLDARKCLOUDCOVER(
+        open, high, low, close, penetration=0)
+    Doji = talib.CDLDOJI(open, high, low, close)
+    Doji_Star = talib.CDLDOJISTAR(open, high, low, close)
+    Dragonfly_Doji = talib.CDLDRAGONFLYDOJI(open, high, low, close)
+    Engulfing_Pattern = talib.CDLENGULFING(open, high, low, close)
+    Evening_Doji_Star = talib.CDLEVENINGDOJISTAR(
+        open, high, low, close, penetration=0)
+    Evening_Star = talib.CDLEVENINGSTAR(open, high, low, close, penetration=0)
+    Up_Down_gap_side_by_side_white_lines = talib.CDLGAPSIDESIDEWHITE(
+        open, high, low, close)
+    Gravestone_Doji = talib.CDLGRAVESTONEDOJI(open, high, low, close)
+    Hammer = talib.CDLHAMMER(open, high, low, close)
+    Hanging_Man = talib.CDLHANGINGMAN(open, high, low, close)
+    Harami_Pattern = talib.CDLHARAMI(open, high, low, close)
+    Harami_Cross_Pattern = talib.CDLHARAMICROSS(open, high, low, close)
+    High_Wave_Candle = talib.CDLHIGHWAVE(open, high, low, close)
+    Hikkake_Pattern = talib.CDLHIKKAKE(open, high, low, close)
+    Modified_Hikkake_Pattern = talib.CDLHIKKAKEMOD(open, high, low, close)
+    Homing_Pigeon = talib.CDLHOMINGPIGEON(open, high, low, close)
+    Identical_Three_Crows = talib.CDLIDENTICAL3CROWS(open, high, low, close)
+    In_Neck_Pattern = talib.CDLINNECK(open, high, low, close)
+    Inverted_Hammer = talib.CDLINVERTEDHAMMER(open, high, low, close)
+    Kicking = talib.CDLKICKING(open, high, low, close)
+    Kicking_bull_bear_determined_by_the_longer_marubozu = talib.CDLKICKINGBYLENGTH(
+        open, high, low, close)
+    Ladder_Bottom = talib.CDLLADDERBOTTOM(open, high, low, close)
+    Long_Legged_Doji = talib.CDLLONGLEGGEDDOJI(open, high, low, close)
+    Long_Line_Candle = talib.CDLLONGLINE(open, high, low, close)
+    Marubozu = talib.CDLMARUBOZU(open, high, low, close)
+    Matching_Low = talib.CDLMATCHINGLOW(open, high, low, close)
+    Mat_Hold = talib.CDLMATHOLD(open, high, low, close, penetration=0)
+    Morning_Doji_Star = talib.CDLMORNINGDOJISTAR(
+        open, high, low, close, penetration=0)
+    Morning_Star = talib.CDLMORNINGSTAR(open, high, low, close, penetration=0)
+    On_Neck_Pattern = talib.CDLONNECK(open, high, low, close)
+    Piercing_Pattern = talib.CDLPIERCING(open, high, low, close)
+    Rickshaw_Man = talib.CDLRICKSHAWMAN(open, high, low, close)
+    Rising_Falling_Three_Methods = talib.CDLRISEFALL3METHODS(
+        open, high, low, close)
+    Separating_Lines = talib.CDLSEPARATINGLINES(open, high, low, close)
+    Shooting_Star = talib.CDLSHOOTINGSTAR(open, high, low, close)
+    Short_Line_Candle = talib.CDLSHORTLINE(open, high, low, close)
+    Spinning_Top = talib.CDLSPINNINGTOP(open, high, low, close)
+    Stalled_Pattern = talib.CDLSTALLEDPATTERN(open, high, low, close)
+    Stick_Sandwich = talib.CDLSTICKSANDWICH(open, high, low, close)
+    Takuri_Dragonfly_Doji_with_very_long_lower_shadow = talib.CDLTAKURI(
+        open, high, low, close)
+    Tasuki_Gap = talib.CDLTASUKIGAP(open, high, low, close)
+    Thrusting_Pattern = talib.CDLTHRUSTING(open, high, low, close)
+    Tristar_Pattern = talib.CDLTRISTAR(open, high, low, close)
+    Unique_3_River = talib.CDLUNIQUE3RIVER(open, high, low, close)
+    Upside_Gap_Two_Crows = talib.CDLUPSIDEGAP2CROWS(open, high, low, close)
+    Upside_Downside_Gap_Three_Methods = talib.CDLXSIDEGAP3METHODS(
+        open, high, low, close)
+    pattern_arrays = [tristar, Two_Crows, Three_Black_Crows, Three_Inside_Up_Down, Three_Line_Strike, Three_Outside_Up_Down, Three_Stars_In_The_South, Three_Advancing_White_Soldiers, Abandoned_Baby, Advance_Block, Belt_hold, Breakaway, Closing_Marubozu, Concealing_Baby_Swallow, Counterattack, Dark_Cloud_Cover, Doji, Doji_Star, Dragonfly_Doji, Engulfing_Pattern, Evening_Doji_Star, Evening_Star, Up_Down_gap_side_by_side_white_lines, Gravestone_Doji, Hammer, Hanging_Man, Harami_Pattern, Harami_Cross_Pattern, High_Wave_Candle, Hikkake_Pattern, Modified_Hikkake_Pattern, Homing_Pigeon,
+                      Identical_Three_Crows, In_Neck_Pattern, Inverted_Hammer, Kicking, Kicking_bull_bear_determined_by_the_longer_marubozu, Ladder_Bottom, Long_Legged_Doji, Long_Line_Candle, Marubozu, Matching_Low, Mat_Hold, Morning_Doji_Star, Morning_Star, On_Neck_Pattern, Piercing_Pattern, Rickshaw_Man, Rising_Falling_Three_Methods, Separating_Lines, Shooting_Star, Short_Line_Candle, Spinning_Top, Stalled_Pattern, Stick_Sandwich, Takuri_Dragonfly_Doji_with_very_long_lower_shadow, Tasuki_Gap, Thrusting_Pattern, Tristar_Pattern, Unique_3_River, Upside_Gap_Two_Crows, Upside_Downside_Gap_Three_Methods]
+
+    pattern_names = ['tristar', 'Two_Crows', 'Three_Black_Crows', 'Three_Inside_Up_Down', 'Three_Line_Strike', 'Three_Outside_Up_Down', 'Three_Stars_In_The_South', 'Three_Advancing_White_Soldiers', 'Abandoned_Baby', 'Advance_Block', 'Belt_hold', 'Breakaway', 'Closing_Marubozu', 'Concealing_Baby_Swallow', 'Counterattack', 'Dark_Cloud_Cover', 'Doji', 'Doji_Star', 'Dragonfly_Doji', 'Engulfing_Pattern', 'Evening_Doji_Star', 'Evening_Star', 'Up_Down_gap_side_by_side_white_lines', 'Gravestone_Doji', 'Hammer', 'Hanging_Man', 'Harami_Pattern', 'Harami_Cross_Pattern', 'High_Wave_Candle', 'Hikkake_Pattern', 'Modified_Hikkake_Pattern', 'Homing_Pigeon',
+                     'Identical_Three_Crows', 'In_Neck_Pattern', 'Inverted_Hammer', 'Kicking', 'Kicking_bull_bear_determined_by_the_longer_marubozu', 'Ladder_Bottom', 'Long_Legged_Doji', 'Long_Line_Candle', 'Marubozu', 'Matching_Low', 'Mat_Hold', 'Morning_Doji_Star', 'Morning_Star', 'On_Neck_Pattern', 'Piercing_Pattern', 'Rickshaw_Man', 'Rising_Falling_Three_Methods', 'Separating_Lines', 'Shooting_Star', 'Short_Line_Candle', 'Spinning_Top', 'Stalled_Pattern', 'Stick_Sandwich', 'Takuri_Dragonfly_Doji_with_very_long_lower_shadow', 'Tasuki_Gap', 'Thrusting_Pattern', 'Tristar_Pattern', 'Unique_3_River', 'Upside_Gap_Two_Crows', 'Upside_Downside_Gap_Three_Methods']
+
+    for pattern_results in range(len(pattern_arrays)):
+        # print(f'Found {pattern_names[pattern_results]}')
+        # print(pattern_arrays[pattern_results])
+        for index in range(len(pattern_arrays[pattern_results])):
+            value = pattern_arrays[pattern_results][index]
+            val = val + value
+            # if value != 0:
+    #             print(
+    #                 f'{pattern_arrays[pattern_results]} index - {index} value - {value}')
+    # print('-----------------------------------------------')
+    # print(f'Total val = {val}')
+    return val
 
 
 def up_or_down(row, target):
@@ -25,9 +142,9 @@ def up_or_down(row, target):
 
 def add_future_price_change(df, days):
     df[f'target_price_change_{days}'] = (
-        (df['close'].shift(-4) - df['close'])/df['close'])*100
-    df[f'up_or_down'] = df.apply(lambda row: up_or_down(
-        row, f'target_price_change_{days}'), axis=1)
+        (df['close'].shift(-days) - df['close'])/df['close'])*100
+    # df[f'up_or_down'] = df.apply(lambda row: up_or_down(
+    #     row, f'target_price_change_{days}'), axis=1)
 
 
 def countAbove(val, _list):
@@ -274,6 +391,17 @@ def add_macd(df, short=6, long=15, signal=20):
 
 
 def addIndicators(df):
+
+    inputs = {
+        'open': np.array(df.open),
+        'high': np.array(df.close),
+        'low': np.array(df.high),
+        'close': np.array(df.low),
+        'volume': np.array(df.volume)
+    }
+    print(talib.abstract.Function('STOCH'))
+    # slowk, slowd = talib.STOCH(inputs, 5, 3, 0, 3, 0)
+
     # add_sma(2, 'close', df)
     # add_sma(20, 'close', df)
     # add_sma(50, 'close', df)
@@ -285,26 +413,27 @@ def addIndicators(df):
     add_rsi(2, 'close', df)
     add_rsi(3, 'close', df)
     add_rsi(4, 'close', df)
+    add_rsi(8, 'close', df)
     add_rsi(14, 'close', df)
-    # df.dropna()
-    # add_ad(df, 5)
-    # add_macd(df)
-    # add_adx(df)
-    # add_cmo(df, 5)
-    # add_roc(df, 10)
-    # add_willr(df, 10)
-    # add_stochrsi(df, 5)
-    # add_stoch(df, 5, 3, 3)
-    # add_obv(df)
-    # add_mom(df, 5)
-    # add_bop(df)
-    # add_bbands(df, 5, 2)
-    # add_cci(df, 5)
-    # add_atr(df, 5)
-    # add_mfi(df, 5)
-    # add_ultosc(df, 2, 3, 5)
-    # add_vosc(df, 2, 5)
-    # add_vwma(df, 5)
+
+    add_ad(df, 5)
+    add_macd(df)
+    add_adx(df)
+    add_cmo(df, 5)
+    add_roc(df, 10)
+    add_willr(df, 10)
+    add_stochrsi(df, 5)
+    add_stoch(df, 5, 3, 3)
+    add_obv(df)
+    add_mom(df, 5)
+    add_bop(df)
+    add_bbands(df, 5, 2)
+    add_cci(df, 5)
+    add_atr(df, 5)
+    add_mfi(df, 5)
+    add_ultosc(df, 2, 3, 5)
+    add_vosc(df, 2, 5)
+    add_vwma(df, 5)
 
 
 def prepairData(df):
@@ -371,4 +500,151 @@ def prepairData(df):
 
     return training_df
 
-    # store the data!
+
+def add_consecutive_up_down_days(df, window):
+    _window = window
+    if window > 5: _window = 5
+    df[f'rolling_{window}_consecutive_up'] = df['up_down_day'].rolling(
+        _window).apply(lambda x: consecutiveUp(x))
+
+    df[f'rolling_{window}_consecutive_down'] = df['up_down_day'].rolling(
+        _window).apply(lambda x: consecutiveDown(x))
+
+
+def consecutiveUp(days):
+    count = 0
+    for n in days:
+
+        if n > 0:
+            count = count+1
+        else:
+            count = 0
+    return count
+
+
+def consecutiveDown(days):
+    count = 0
+    for n in days:
+
+        if n < 0:
+            count = count+1
+        else:
+            count = 0
+    return count
+
+
+def countBelow(val, _list):
+    count = 0
+    for n in range(len(list(_list))):
+        # print(n)
+        # print(list(_list))
+        # print(list(_list)[n])
+        if list(_list)[n] < val:
+            count = count+1
+    return count
+
+
+def up_or_down(row):
+    if row['open'] > row['close']:
+        return 1
+    if row['open'] < row['close']:
+        return -1
+    return 0
+
+
+"""
+def pattern_recognition(df):
+    test_len = 5
+    dates = np.array(df.index[0:test_len])
+    open = np.array(df.open[0:test_len])
+    close = np.array(df.close[0:test_len])
+    high = np.array(df.high[0:test_len])
+    low = np.array(df.low[0:test_len])
+    volume = np.array(df.volume[0:test_len])
+    tristar = talib.CDLTRISTAR(open, high, low, close)
+    Two_Crows = talib.CDL2CROWS(open, high, low, close)
+    Three_Black_Crows = talib.CDL3BLACKCROWS(open, high, low, close)
+    Three_Inside_Up_Down = talib.CDL3INSIDE(open, high, low, close)
+    Three_Line_Strike = talib.CDL3LINESTRIKE(open, high, low, close)
+    Three_Outside_Up_Down = talib.CDL3OUTSIDE(open, high, low, close)
+    Three_Stars_In_The_South = talib.CDL3STARSINSOUTH(open, high, low, close)
+    Three_Advancing_White_Soldiers = talib.CDL3WHITESOLDIERS(
+        open, high, low, close)
+    Abandoned_Baby = talib.CDLABANDONEDBABY(
+        open, high, low, close, penetration=0)
+    Advance_Block = talib.CDLADVANCEBLOCK(open, high, low, close)
+    Belt_hold = talib.CDLBELTHOLD(open, high, low, close)
+    Breakaway = talib.CDLBREAKAWAY(open, high, low, close)
+    Closing_Marubozu = talib.CDLCLOSINGMARUBOZU(open, high, low, close)
+    Concealing_Baby_Swallow = talib.CDLCONCEALBABYSWALL(open, high, low, close)
+    Counterattack = talib.CDLCOUNTERATTACK(open, high, low, close)
+    Dark_Cloud_Cover = talib.CDLDARKCLOUDCOVER(
+        open, high, low, close, penetration=0)
+    Doji = talib.CDLDOJI(open, high, low, close)
+    Doji_Star = talib.CDLDOJISTAR(open, high, low, close)
+    Dragonfly_Doji = talib.CDLDRAGONFLYDOJI(open, high, low, close)
+    Engulfing_Pattern = talib.CDLENGULFING(open, high, low, close)
+    Evening_Doji_Star = talib.CDLEVENINGDOJISTAR(
+        open, high, low, close, penetration=0)
+    Evening_Star = talib.CDLEVENINGSTAR(open, high, low, close, penetration=0)
+    Up_Down_gap_side_by_side_white_lines = talib.CDLGAPSIDESIDEWHITE(
+        open, high, low, close)
+    Gravestone_Doji = talib.CDLGRAVESTONEDOJI(open, high, low, close)
+    Hammer = talib.CDLHAMMER(open, high, low, close)
+    Hanging_Man = talib.CDLHANGINGMAN(open, high, low, close)
+    Harami_Pattern = talib.CDLHARAMI(open, high, low, close)
+    Harami_Cross_Pattern = talib.CDLHARAMICROSS(open, high, low, close)
+    High_Wave_Candle = talib.CDLHIGHWAVE(open, high, low, close)
+    Hikkake_Pattern = talib.CDLHIKKAKE(open, high, low, close)
+    Modified_Hikkake_Pattern = talib.CDLHIKKAKEMOD(open, high, low, close)
+    Homing_Pigeon = talib.CDLHOMINGPIGEON(open, high, low, close)
+    Identical_Three_Crows = talib.CDLIDENTICAL3CROWS(open, high, low, close)
+    In_Neck_Pattern = talib.CDLINNECK(open, high, low, close)
+    Inverted_Hammer = talib.CDLINVERTEDHAMMER(open, high, low, close)
+    Kicking = talib.CDLKICKING(open, high, low, close)
+    Kicking_bull_bear_determined_by_the_longer_marubozu = talib.CDLKICKINGBYLENGTH(
+        open, high, low, close)
+    Ladder_Bottom = talib.CDLLADDERBOTTOM(open, high, low, close)
+    Long_Legged_Doji = talib.CDLLONGLEGGEDDOJI(open, high, low, close)
+    Long_Line_Candle = talib.CDLLONGLINE(open, high, low, close)
+    Marubozu = talib.CDLMARUBOZU(open, high, low, close)
+    Matching_Low = talib.CDLMATCHINGLOW(open, high, low, close)
+    Mat_Hold = talib.CDLMATHOLD(open, high, low, close, penetration=0)
+    Morning_Doji_Star = talib.CDLMORNINGDOJISTAR(
+        open, high, low, close, penetration=0)
+    Morning_Star = talib.CDLMORNINGSTAR(open, high, low, close, penetration=0)
+    On_Neck_Pattern = talib.CDLONNECK(open, high, low, close)
+    Piercing_Pattern = talib.CDLPIERCING(open, high, low, close)
+    Rickshaw_Man = talib.CDLRICKSHAWMAN(open, high, low, close)
+    Rising_Falling_Three_Methods = talib.CDLRISEFALL3METHODS(
+        open, high, low, close)
+    Separating_Lines = talib.CDLSEPARATINGLINES(open, high, low, close)
+    Shooting_Star = talib.CDLSHOOTINGSTAR(open, high, low, close)
+    Short_Line_Candle = talib.CDLSHORTLINE(open, high, low, close)
+    Spinning_Top = talib.CDLSPINNINGTOP(open, high, low, close)
+    Stalled_Pattern = talib.CDLSTALLEDPATTERN(open, high, low, close)
+    Stick_Sandwich = talib.CDLSTICKSANDWICH(open, high, low, close)
+    Takuri_Dragonfly_Doji_with_very_long_lower_shadow = talib.CDLTAKURI(
+        open, high, low, close)
+    Tasuki_Gap = talib.CDLTASUKIGAP(open, high, low, close)
+    Thrusting_Pattern = talib.CDLTHRUSTING(open, high, low, close)
+    Tristar_Pattern = talib.CDLTRISTAR(open, high, low, close)
+    Unique_3_River = talib.CDLUNIQUE3RIVER(open, high, low, close)
+    Upside_Gap_Two_Crows = talib.CDLUPSIDEGAP2CROWS(open, high, low, close)
+    Upside_Downside_Gap_Three_Methods = talib.CDLXSIDEGAP3METHODS(
+        open, high, low, close)
+    pattern_arrays = [tristar, Two_Crows, Three_Black_Crows, Three_Inside_Up_Down, Three_Line_Strike, Three_Outside_Up_Down, Three_Stars_In_The_South, Three_Advancing_White_Soldiers, Abandoned_Baby, Advance_Block, Belt_hold, Breakaway, Closing_Marubozu, Concealing_Baby_Swallow, Counterattack, Dark_Cloud_Cover, Doji, Doji_Star, Dragonfly_Doji, Engulfing_Pattern, Evening_Doji_Star, Evening_Star, Up_Down_gap_side_by_side_white_lines, Gravestone_Doji, Hammer, Hanging_Man, Harami_Pattern, Harami_Cross_Pattern, High_Wave_Candle, Hikkake_Pattern, Modified_Hikkake_Pattern, Homing_Pigeon,
+                      Identical_Three_Crows, In_Neck_Pattern, Inverted_Hammer, Kicking, Kicking_bull_bear_determined_by_the_longer_marubozu, Ladder_Bottom, Long_Legged_Doji, Long_Line_Candle, Marubozu, Matching_Low, Mat_Hold, Morning_Doji_Star, Morning_Star, On_Neck_Pattern, Piercing_Pattern, Rickshaw_Man, Rising_Falling_Three_Methods, Separating_Lines, Shooting_Star, Short_Line_Candle, Spinning_Top, Stalled_Pattern, Stick_Sandwich, Takuri_Dragonfly_Doji_with_very_long_lower_shadow, Tasuki_Gap, Thrusting_Pattern, Tristar_Pattern, Unique_3_River, Upside_Gap_Two_Crows, Upside_Downside_Gap_Three_Methods]
+
+    pattern_names = ['tristar', 'Two_Crows', 'Three_Black_Crows', 'Three_Inside_Up_Down', 'Three_Line_Strike', 'Three_Outside_Up_Down', 'Three_Stars_In_The_South', 'Three_Advancing_White_Soldiers', 'Abandoned_Baby', 'Advance_Block', 'Belt_hold', 'Breakaway', 'Closing_Marubozu', 'Concealing_Baby_Swallow', 'Counterattack', 'Dark_Cloud_Cover', 'Doji', 'Doji_Star', 'Dragonfly_Doji', 'Engulfing_Pattern', 'Evening_Doji_Star', 'Evening_Star', 'Up_Down_gap_side_by_side_white_lines', 'Gravestone_Doji', 'Hammer', 'Hanging_Man', 'Harami_Pattern', 'Harami_Cross_Pattern', 'High_Wave_Candle', 'Hikkake_Pattern', 'Modified_Hikkake_Pattern', 'Homing_Pigeon',
+                      'Identical_Three_Crows', 'In_Neck_Pattern', 'Inverted_Hammer', 'Kicking', 'Kicking_bull_bear_determined_by_the_longer_marubozu', 'Ladder_Bottom', 'Long_Legged_Doji', 'Long_Line_Candle', 'Marubozu', 'Matching_Low', 'Mat_Hold', 'Morning_Doji_Star', 'Morning_Star', 'On_Neck_Pattern', 'Piercing_Pattern', 'Rickshaw_Man', 'Rising_Falling_Three_Methods', 'Separating_Lines', 'Shooting_Star', 'Short_Line_Candle', 'Spinning_Top', 'Stalled_Pattern', 'Stick_Sandwich', 'Takuri_Dragonfly_Doji_with_very_long_lower_shadow', 'Tasuki_Gap', 'Thrusting_Pattern', 'Tristar_Pattern', 'Unique_3_River', 'Upside_Gap_Two_Crows', 'Upside_Downside_Gap_Three_Methods']
+    [print(i, d) for i, d in enumerate(dates)]
+    for pattern_results in range(len(pattern_arrays)):
+        print(f'Found {pattern_names[pattern_results]}')
+        for index in range(len(pattern_arrays[pattern_results])):
+            value = pattern_arrays[pattern_results][index] 
+            if value != 0:
+                print(
+                    f'{pattern_arrays[pattern_results]} index - {index} value - {value}')
+
+"""
